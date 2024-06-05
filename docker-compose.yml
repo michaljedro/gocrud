@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.8'
 
 services:
   app:
@@ -12,20 +12,20 @@ services:
   clickhouse:
     image: yandex/clickhouse-server:latest
     ports:
-      - "8123:8123"
       - "9000:9000"
+      - "8123:8123"
     volumes:
       - clickhouse-data:/var/lib/clickhouse
 
   vault:
-    image: vault:latest
-    environment:
-      VAULT_DEV_ROOT_TOKEN_ID: root
-      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+    image: vault:1.9.0
     ports:
       - "8200:8200"
     volumes:
-      - vault-data:/vault/file
+      - vault-data:/vault/data
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: root
+      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
 
 volumes:
   clickhouse-data:
