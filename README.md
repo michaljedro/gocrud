@@ -1,6 +1,6 @@
-# gocrud
-gocrud
+# gtytuł projektu
+Golang Rest API
 
 
-uruchomienie testów:
-# go test -v
+# uruchomienie testów:
+ go test -v
