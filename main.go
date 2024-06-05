@@ -2,9 +2,11 @@ package main
 
 import (
 	"errors"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/hashicorp/vault/api"
 )
 type user struct {
 	User string `json:"id"`
@@ -16,6 +18,21 @@ var Users = []user{
 	{User: "Michael Owen", Email: "Clean Room", Completed: false},
 	{User: "David Beckham", Email: "Dirty Room", Completed: true},
 	{User: "David Seaman", Email: "Clean windows", Completed: true},
+}
+var vaultClient *api.Client
+
+func initVault() {
+	config := &api.Config{
+		Address: "http://vault:8200",
+	}
+
+	client, err := api.NewClient(config)
+	if err != nil {
+		log.Fatalf("Failed to create Vault client: %v", err)
+	}
+
+	client.SetToken("root")
+	vaultClient = client
 }
 func getUsers(context *gin.Context) {
 	context.IndentedJSON(http.StatusOK, Users)
@@ -59,6 +76,8 @@ func getUserByID(id string) (*user, error) {
 }
 
 func main() {
+	initVault()
+
 	router := gin.Default()
 	router.GET("/users", getUsers)
 	router.GET("/users/:id", getUser)
